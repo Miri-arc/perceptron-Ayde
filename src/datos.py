@@ -1,14 +1,26 @@
 """Carga y preparación de los datos para el Perceptrón."""
+import os
 import numpy as np
 import pandas as pd
+from src.excepciones import DatosInvalidosError
 
 
 def cargar_datos(ruta, objetivo):
-    """Lee el CSV y devuelve el DataFrame.
-
-    `objetivo` es el nombre de la columna con la clase (0 o 1).
+    """Lee el CSV y devuelve el DataFrame validando la existencia del archivo,
+    la presencia de la columna objetivo y que esta sea binaria.
     """
+    if not os.path.exists(ruta):
+        raise DatosInvalidosError(f"No existe el archivo {ruta}")
+
     df = pd.read_csv(ruta)
+
+    if objetivo not in df.columns:
+        raise DatosInvalidosError(f"La columna objetivo '{objetivo}' no existe en el archivo.")
+
+    valores_unicos = df[objetivo].nunique()
+    if valores_unicos != 2:
+        raise DatosInvalidosError(f"La columna '{objetivo}' no es binaria (posee {valores_unicos} valores distintos).")
+
     return df
 
 
