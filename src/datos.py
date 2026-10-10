@@ -25,7 +25,11 @@ def cargar_datos(ruta, objetivo):
 
 
 def limpiar(df, features):
-    """Devuelve una copia con los nulos de cada feature rellenados con su mediana."""
+    """Valida que existan las columnas y devuelve una copia con los nulos de cada feature rellenados con su mediana."""
+    columnas_faltantes = [f for f in features if f not in df.columns]
+    if columnas_faltantes:
+        raise DatosInvalidosError(f"Columnas inexistentes: {', '.join(columnas_faltantes)}")
+
     datos = df.copy()
     for col in features:
         datos[col] = datos[col].fillna(datos[col].median())
