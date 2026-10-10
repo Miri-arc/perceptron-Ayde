@@ -8,7 +8,7 @@ import sys
 
 from src.datos import cargar_datos, limpiar, estandarizar, dividir
 from src.perceptron import Perceptron
-from src.metricas import accuracy
+from src.metricas import accuracy, error_clasificacion, matriz_confusion
 from src.excepciones import DatosInvalidosError, ModeloNoEntrenadoError
 
 FEATURES_BASE = ["radio", "textura", "perimetro", "area"]
@@ -32,6 +32,8 @@ def main():
     y_pred = modelo1.predecir(X_te)
     print("Modelo 1 (tasa 0.01)")
     print("  accuracy:", round(accuracy(y_te, y_pred), 3))
+    print("  error:", round(error_clasificacion(y_te, y_pred), 3))
+    print("  matriz de confusión:\n", matriz_confusion(y_te, y_pred))
     print("  errores por época:", modelo1.errores_por_epoca[:10], "...")
 
     # ---------------- Modelo 2: tasa grande ----------------
@@ -44,10 +46,9 @@ def main():
     y_pred = modelo2.predecir(X_te)
     print("Modelo 2 (tasa 0.5)")
     print("  accuracy:", round(accuracy(y_te, y_pred), 3))
+    print("  error:", round(error_clasificacion(y_te, y_pred), 3))
+    print("  matriz de confusión:\n", matriz_confusion(y_te, y_pred))
     print("  errores por época:", modelo2.errores_por_epoca[:10], "...")
-
-    # ---------------- Modelo 3: otras features ----------------
-    # Tarea 5: permitir elegir las features con --features
 
 
 if __name__ == "__main__":
